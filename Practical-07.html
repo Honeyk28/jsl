@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 7 - To-Do List</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #245b91;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 11px;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 9px 12px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 12px 0;
+            border-bottom: 1px solid #dce8f5;
+        }
+
+        .task {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit {
+            background: #d49b32;
+        }
+
+        .delete {
+            background: #c64c4c;
+        }
+
+        .empty {
+            color: #7891aa;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>My To-Do List</h1>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Enter a task">
+            <button onclick="addTask()">Add</button>
+        </div>
+
+        <ul id="taskList"></ul>
+        <p id="emptyMessage" class="empty">No tasks added yet.</p>
+    </div>
+
+    <script>
+        function addTask() {
+            let input = document.getElementById("taskInput");
+            let task = input.value.trim();
+
+            if (task === "") {
+                alert("Please enter a task.");
+                return;
+            }
+
+            let li = document.createElement("li");
+
+            let span = document.createElement("span");
+            span.className = "task";
+            span.textContent = task;
+
+            let actions = document.createElement("div");
+            actions.className = "actions";
+
+            let editBtn = document.createElement("button");
+            editBtn.textContent = "Edit";
+            editBtn.className = "edit";
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.className = "delete";
+
+            editBtn.onclick = function() {
+                let updatedTask = prompt("Edit task:", span.textContent);
+
+                if (updatedTask !== null && updatedTask.trim() !== "") {
+                    span.textContent = updatedTask.trim();
+                }
+            };
+
+            deleteBtn.onclick = function() {
+                li.remove();
+                updateEmptyMessage();
+            };
+
+            actions.append(editBtn, deleteBtn);
+            li.append(span, actions);
+
+            document.getElementById("taskList").appendChild(li);
+
+            input.value = "";
+            updateEmptyMessage();
+        }
+
+        function updateEmptyMessage() {
+            let list = document.getElementById("taskList");
+
+            document.getElementById("emptyMessage").style.display =
+                list.children.length === 0 ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>
