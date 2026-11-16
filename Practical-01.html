@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 1 - JavaScript Basics</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 420px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+            text-align: center;
+        }
+
+        h1 {
+            color: #245b91;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        #result {
+            margin-top: 22px;
+            color: #245b91;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>JavaScript Basics</h1>
+
+        <input type="text" id="name" placeholder="Enter your name">
+        <input type="number" id="age" placeholder="Enter your age">
+
+        <button onclick="showWelcome()">Submit</button>
+
+        <h2 id="result"></h2>
+    </div>
+
+    <script>
+        // Internal JavaScript
+
+        console.log("Welcome to JavaScript!");
+        console.info("Practical 1 started");
+        console.warn("This is a warning message");
+        console.error("Example error message");
+
+        function showWelcome() {
+            let name = document.getElementById("name").value;
+            let age = document.getElementById("age").value;
+
+            if (name === "" || age === "") {
+                alert("Please enter all details.");
+                return;
+            }
+
+            document.getElementById("result").innerHTML =
+                `Welcome, ${name}! You are ${age} years old.`;
+
+            console.log("User Name:", name);
+            console.log("User Age:", age);
+        }
+    </script>
+
+</body>
+</html>
