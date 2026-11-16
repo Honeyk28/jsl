@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 11 - Countdown Timer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 430px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+            text-align: center;
+        }
+
+        h1 {
+            color: #245b91;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #timer {
+            font-size: 48px;
+            color: #245b91;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 11px 20px;
+            margin: 5px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        #message {
+            color: #245b91;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Countdown Timer</h1>
+
+        <input type="number" id="seconds" placeholder="Enter seconds" min="1">
+
+        <div id="timer">00:00</div>
+
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">Reset</button>
+
+        <p id="message">Enter time to begin.</p>
+    </div>
+
+    <script type="module">
+        // ES6 module-style function
+        function formatTime(seconds) {
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+
+            return `${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+        }
+
+        let timeLeft = 0;
+        let interval;
+        let running = false;
+
+        function updateDisplay() {
+            document.getElementById("timer").textContent = formatTime(timeLeft);
+        }
+
+        function startTimer() {
+            if (running) return;
+
+            if (timeLeft <= 0) {
+                timeLeft = Number(document.getElementById("seconds").value);
+            }
+
+            if (!Number.isInteger(timeLeft) || timeLeft <= 0) {
+                document.getElementById("message").textContent =
+                    "Please enter valid seconds.";
+                return;
+            }
+
+            running = true;
+            document.getElementById("message").textContent = "Timer running...";
+
+            interval = setInterval(function() {
+                timeLeft--;
+                updateDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    running = false;
+
+                    document.getElementById("message").textContent =
+                        "Time's up!";
+
+                    setTimeout(function() {
+                        alert("Countdown completed!");
+                    }, 300);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(interval);
+            running = false;
+            document.getElementById("message").textContent = "Timer paused.";
+        }
+
+        function resetTimer() {
+            clearInterval(interval);
+            running = false;
+            timeLeft = 0;
+            updateDisplay();
+            document.getElementById("seconds").value = "";
+            document.getElementById("message").textContent = "Timer reset.";
+        }
+
+        document.querySelector("button[onclick='startTimer()']")
+            .addEventListener("click", startTimer);
+        document.querySelector("button[onclick='stopTimer()']")
+            .addEventListener("click", stopTimer);
+        document.querySelector("button[onclick='resetTimer()']")
+            .addEventListener("click", resetTimer);
+
+        window.startTimer = startTimer;
+        window.stopTimer = stopTimer;
+        window.resetTimer = resetTimer;
+    </script>
+
+</body>
+</html>
