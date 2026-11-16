@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 10 - JSON and Fetch API</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            padding: 35px 15px;
+        }
+
+        .container {
+            background: white;
+            max-width: 750px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            color: #245b91;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 11px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #dce8f5;
+        }
+
+        th {
+            background: #eaf3ff;
+            color: #245b91;
+        }
+
+        #status {
+            color: #245b91;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>JSON Data Viewer</h1>
+
+        <div class="buttons">
+            <button onclick="fetchData()">Fetch API</button>
+            <button onclick="jqueryData()">jQuery AJAX</button>
+        </div>
+
+        <p id="status">Click a button to load user data.</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="userData"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiURL = "https://jsonplaceholder.typicode.com/users";
+
+        // Display JSON data in table
+        function displayUsers(users) {
+            let rows = "";
+
+            users.forEach(user => {
+                rows += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("userData").innerHTML = rows;
+            document.getElementById("status").textContent =
+                users.length + " users loaded successfully.";
+        }
+
+        // Fetch API
+        async function fetchData() {
+            try {
+                document.getElementById("status").textContent = "Loading...";
+
+                let response = await fetch(apiURL);
+
+                if (!response.ok) {
+                    throw new Error("Failed to load data");
+                }
+
+                let users = await response.json();
+                displayUsers(users);
+
+            } catch (error) {
+                document.getElementById("status").textContent = error.message;
+            }
+        }
+
+        // jQuery AJAX using getJSON()
+        function jqueryData() {
+            $("#status").text("Loading...");
+
+            $.getJSON(apiURL)
+                .done(function(users) {
+                    displayUsers(users);
+                })
+                .fail(function() {
+                    $("#status").text("Unable to load data.");
+                });
+        }
+    </script>
+
+</body>
+</html>
