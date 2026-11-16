@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 12 - TaskFlow</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .container {
+            background: white;
+            max-width: 550px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            color: #245b91;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7891aa;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #dce8f5;
+        }
+
+        .task-text {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #8ba0b5;
+        }
+
+        .delete {
+            background: #c64c4c;
+        }
+
+        .quote-box {
+            margin-top: 25px;
+            padding: 18px;
+            background: #eaf3ff;
+            border-radius: 10px;
+            color: #245b91;
+        }
+
+        .quote-box button {
+            margin-top: 12px;
+        }
+
+        #quote {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        #count {
+            margin-top: 15px;
+            color: #245b91;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>TaskFlow</h1>
+        <p class="subtitle">Your Personal Task Manager</p>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Enter a new task">
+            <button id="addTask">Add Task</button>
+        </div>
+
+        <ul id="taskList"></ul>
+
+        <p id="count">Total Tasks: 0</p>
+
+        <div class="quote-box">
+            <h3>Daily Motivation</h3>
+            <p id="quote">Click below to get a motivational quote.</p>
+            <button id="getQuote">Get Quote</button>
+        </div>
+    </div>
+
+    <script>
+        // Load saved tasks
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        // Save tasks in localStorage
+        function saveTasks() {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+
+        // Display tasks using jQuery
+        function displayTasks() {
+            $("#taskList").empty();
+
+            tasks.forEach(function(task, index) {
+                let li = $("<li></li>");
+
+                let span = $("<span></span>")
+                    .addClass("task-text")
+                    .text(task.name);
+
+                if (task.completed) {
+                    span.addClass("completed");
+                }
+
+                span.on("click", function() {
+                    task.completed = !task.completed;
+                    saveTasks();
+                    displayTasks();
+                });
+
+                let deleteBtn = $("<button></button>")
+                    .text("Delete")
+                    .addClass("delete")
+                    .on("click", function() {
+                        tasks.splice(index, 1);
+                        saveTasks();
+                        displayTasks();
+                    });
+
+                li.append(span, deleteBtn);
+                $("#taskList").append(li);
+            });
+
+            $("#count").text("Total Tasks: " + tasks.length);
+        }
+
+        // Add task using click event
+        $("#addTask").on("click", function() {
+            let name = $("#taskInput").val().trim();
+
+            if (name === "") {
+                alert("Please enter a task.");
+                return;
+            }
+
+            tasks.push({
+                name: name,
+                completed: false
+            });
+
+            saveTasks();
+            displayTasks();
+            $("#taskInput").val("");
+        });
+
+        // Add task using Enter key
+        $("#taskInput").on("keypress", function(event) {
+            if (event.which === 13) {
+                $("#addTask").click();
+            }
+        });
+
+        // AJAX request to retrieve a random quote
+        $("#getQuote").on("click", function() {
+            $("#quote").text("Loading quote...");
+
+            $.getJSON("https://dummyjson.com/quotes/random")
+                .done(function(data) {
+                    $("#quote").text(
+                        '"' + data.quote + '" — ' + data.author
+                    );
+                })
+                .fail(function() {
+                    $("#quote").text("Unable to load quote. Try again.");
+                });
+        });
+
+        // Display saved tasks when page loads
+        displayTasks();
+    </script>
+
+</body>
+</html>
