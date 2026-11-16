@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 6 - Strings and Regex</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            color: #245b91;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        textarea {
+            height: 110px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        #result {
+            margin-top: 20px;
+            color: #245b91;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        h3 {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>String Analyzer</h1>
+
+        <textarea id="text" placeholder="Enter text to analyze..."></textarea>
+
+        <input type="text" id="email" placeholder="Enter email address">
+
+        <button onclick="analyzeText()">Analyze Text</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function analyzeText() {
+            let text = document.getElementById("text").value.trim();
+            let email = document.getElementById("email").value.trim();
+
+            if (text === "" || email === "") {
+                alert("Please enter text and email.");
+                return;
+            }
+
+            // String methods
+            let upper = text.toUpperCase();
+            let lower = text.toLowerCase();
+            let length = text.length;
+
+            let words = text.split(/\s+/).filter(word => word !== "");
+            let wordCount = words.length;
+
+            // Regular expression for email validation
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let validEmail = emailPattern.test(email);
+
+            // Extract email addresses from text
+            let emailPattern2 = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+            let extractedEmails = text.match(emailPattern2) || [];
+
+            document.getElementById("result").textContent =
+                "UPPERCASE: " + upper + "\n" +
+                "LOWERCASE: " + lower + "\n" +
+                "Character Count: " + length + "\n" +
+                "Word Count: " + wordCount + "\n" +
+                "Email Status: " + (validEmail ? "Valid" : "Invalid") + "\n" +
+                "Extracted Emails: " +
+                (extractedEmails.length ? extractedEmails.join(", ") : "None");
+
+            document.getElementById("result").style.whiteSpace = "pre-line";
+        }
+    </script>
+
+</body>
+</html>
