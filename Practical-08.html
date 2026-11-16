@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 8 - Gym Admission Form</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #245b91;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin: 9px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        .message {
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: #c64c4c;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 18px;
+            color: #245b91;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Gym Admission Form</h1>
+
+        <form id="gymForm">
+            <input type="text" id="name" placeholder="Full Name">
+            <p class="message" id="nameError"></p>
+
+            <input type="number" id="age" placeholder="Age">
+            <p class="message" id="ageError"></p>
+
+            <input type="email" id="email" placeholder="Email Address">
+            <p class="message" id="emailError"></p>
+
+            <input type="tel" id="phone" placeholder="10-digit Phone Number">
+            <p class="message" id="phoneError"></p>
+
+            <select id="membership">
+                <option value="">Select Membership</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Yearly">Yearly</option>
+            </select>
+
+            <p class="message" id="membershipError"></p>
+
+            <button type="submit">Register Now</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Get form elements
+        const form = document.getElementById("gymForm");
+
+        function validateForm() {
+            let valid = true;
+
+            let name = document.getElementById("name").value.trim();
+            let age = Number(document.getElementById("age").value);
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let membership = document.getElementById("membership").value;
+
+            // Name validation
+            document.getElementById("nameError").textContent =
+                name === "" ? "Name is required." : "";
+
+            // Age validation
+            document.getElementById("ageError").textContent =
+                age < 16 || age > 80 ? "Age must be between 16 and 80." : "";
+
+            // Email validation
+            document.getElementById("emailError").textContent =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                ? "" : "Enter a valid email.";
+
+            // Phone validation
+            document.getElementById("phoneError").textContent =
+                /^\d{10}$/.test(phone) ? "" : "Enter a 10-digit phone number.";
+
+            // Membership validation
+            document.getElementById("membershipError").textContent =
+                membership === "" ? "Select a membership plan." : "";
+
+            valid =
+                name !== "" &&
+                age >= 16 && age <= 80 &&
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+                /^\d{10}$/.test(phone) &&
+                membership !== "";
+
+            return valid;
+        }
+
+        // Live validation using input and change events
+        form.addEventListener("input", validateForm);
+        form.addEventListener("change", validateForm);
+
+        // Submit event
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            if (validateForm()) {
+                let name = document.getElementById("name").value.trim();
+                let membership = document.getElementById("membership").value;
+
+                document.getElementById("result").innerHTML = `
+                    <h3>Registration Successful!</h3>
+                    Welcome, ${name}!<br>
+                    Membership: ${membership}
+                `;
+
+                form.reset();
+            } else {
+                document.getElementById("result").textContent =
+                    "Please correct the errors above.";
+            }
+        });
+    </script>
+
+</body>
+</html>
