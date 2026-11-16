@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 2 - Billing Calculator</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 420px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #245b91;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        #result {
+            margin-top: 22px;
+            color: #245b91;
+            line-height: 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Billing Calculator</h1>
+
+        <input type="text" id="product" placeholder="Product name">
+        <input type="number" id="price" placeholder="Price per item">
+        <input type="number" id="quantity" placeholder="Quantity">
+
+        <button onclick="calculateBill()">Calculate Bill</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Demonstrating var, let and const
+        var shopName = "My Store";
+        let discount = 10;
+        const taxRate = 5;
+
+        function calculateBill() {
+            let product = document.getElementById("product").value;
+            let price = Number(document.getElementById("price").value);
+            let quantity = Number(document.getElementById("quantity").value);
+
+            if (product === "" || price <= 0 || quantity <= 0) {
+                alert("Please enter valid details.");
+                return;
+            }
+
+            // Destructuring
+            let [itemPrice, itemQuantity] = [price, quantity];
+
+            let subtotal = itemPrice * itemQuantity;
+            let discountAmount = subtotal * discount / 100;
+            let taxableAmount = subtotal - discountAmount;
+            let tax = taxableAmount * taxRate / 100;
+            let total = taxableAmount + tax;
+
+            // Template literals
+            document.getElementById("result").innerHTML = `
+                <h3>${shopName}</h3>
+                Product: ${product}<br>
+                Price: ₹${itemPrice}<br>
+                Quantity: ${itemQuantity}<br>
+                Subtotal: ₹${subtotal.toFixed(2)}<br>
+                Discount (${discount}%): ₹${discountAmount.toFixed(2)}<br>
+                Tax (${taxRate}%): ₹${tax.toFixed(2)}<br>
+                <h3>Total: ₹${total.toFixed(2)}</h3>
+            `;
+        }
+    </script>
+
+</body>
+</html>
