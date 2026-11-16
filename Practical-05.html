@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical 5 - Shopping Cart</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        body {
+            background: #eaf3ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #b8cde5;
+        }
+
+        h1 {
+            color: #245b91;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            margin: 8px 0;
+            border: 1px solid #b8cde5;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            background: #28669e;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #174b79;
+        }
+
+        .add-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #dce8f5;
+            gap: 10px;
+        }
+
+        .item button {
+            background: #c64c4c;
+        }
+
+        #result {
+            margin-top: 20px;
+            color: #245b91;
+            line-height: 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Shopping Cart</h1>
+
+        <input type="text" id="product" placeholder="Product name">
+        <input type="number" id="price" placeholder="Product price">
+
+        <button class="add-btn" onclick="addProduct()">Add to Cart</button>
+
+        <div id="cart"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Array of product objects
+        let products = [];
+
+        function addProduct() {
+            let name = document.getElementById("product").value.trim();
+            let price = Number(document.getElementById("price").value);
+
+            if (name === "" || price <= 0) {
+                alert("Enter valid product details.");
+                return;
+            }
+
+            // Object creation
+            let product = {
+                id: Date.now(),
+                name: name,
+                price: price
+            };
+
+            products.push(product);
+
+            document.getElementById("product").value = "";
+            document.getElementById("price").value = "";
+
+            displayCart();
+        }
+
+        function removeProduct(id) {
+            // Array filter method
+            products = products.filter(item => item.id !== id);
+            displayCart();
+        }
+
+        function displayCart() {
+            let cart = document.getElementById("cart");
+
+            // Array map method
+            cart.innerHTML = products.map(item => `
+                <div class="item">
+                    <span>${item.name} - ₹${item.price.toFixed(2)}</span>
+                    <button onclick="removeProduct(${item.id})">Remove</button>
+                </div>
+            `).join("");
+
+            // Array reduce method
+            let total = products.reduce((sum, item) => sum + item.price, 0);
+
+            let discount = total >= 1000 ? total * 0.10 : 0;
+            let finalAmount = total - discount;
+
+            document.getElementById("result").innerHTML = `
+                <h3>Cart Summary</h3>
+                Total Items: ${products.length}<br>
+                Subtotal: ₹${total.toFixed(2)}<br>
+                Discount: ₹${discount.toFixed(2)}<br>
+                <h3>Final Amount: ₹${finalAmount.toFixed(2)}</h3>
+            `;
+        }
+
+        displayCart();
+    </script>
+
+</body>
+</html>
